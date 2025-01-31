@@ -4,6 +4,7 @@ import { db } from "../db";
 import { usersTable } from "../db/schema";
 import { and, eq } from "drizzle-orm";
 import { sign } from "hono/jwt";
+import { sendMail } from "../lib/lib";
 
 export const userRouter = new Hono();
 userRouter.post("/signup", async (c) => {
@@ -23,6 +24,9 @@ userRouter.post("/signup", async (c) => {
       msg: "user already exists"
     })
   }
+  const randomNumber = Math.floor(1000 + Math.random() * 9000);
+  const res = sendMail(parseBody.data.email, randomNumber);
+  //send out email to verify the user
   const insertUser = await db.insert(usersTable).values({
     name: parseBody.data.username,
     email: parseBody.data.email,
@@ -60,4 +64,8 @@ userRouter.post("/signin", async (c) => {
     token,
     msg: "successful"
   })
+});
+
+userRouter.post("/resetPassword", async (c) => {
+
 });

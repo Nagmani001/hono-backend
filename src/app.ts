@@ -6,6 +6,7 @@ import { authenticate } from "./middleware";
 const app = new Hono();
 
 app.use("/api/protectedRoutes/*", authenticate);
+
 app.route("/api/auth/", userRouter);
 app.route("/api/protectedRoutes", protectedRoute);
 
